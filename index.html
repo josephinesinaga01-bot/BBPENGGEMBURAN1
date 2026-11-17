@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hati Orang Tua — Materi Pengajaran</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --teal: #0d9488;
+    --teal-light: #2dd4bf;
+    --teal-glow: rgba(45, 212, 191, 0.35);
+    --amber: #d97706;
+    --amber-light: #fbbf24;
+    --emerald: #10b981;
+    --ink: #060d17;
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background: var(--ink);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ BACKGROUND ============ */
+  .bg-orbs { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
+  .bg-orbs::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 75%);
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    animation: float 22s ease-in-out infinite;
+    will-change: transform;
+  }
+  .orb1 { width: 55vmax; height: 55vmax; background: #0d9488; opacity: 0.28; top: -18%; left: -15%; }
+  .orb2 { width: 45vmax; height: 45vmax; background: #d97706; opacity: 0.18; bottom: -20%; right: -12%; animation-delay: -8s; }
+  .orb3 { width: 38vmax; height: 38vmax; background: #10b981; opacity: 0.15; top: 35%; left: 55%; animation-delay: -15s; }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%      { transform: translate(5vw, -4vh) scale(1.12); }
+    66%      { transform: translate(-4vw, 5vh) scale(0.92); }
+  }
+
+  /* ============ DECK ============ */
+  .deck { position: fixed; inset: 0; z-index: 1; }
+
+  .progress {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 3px; background: rgba(255,255,255,0.06); z-index: 60;
+  }
+  .progress-fill {
+    height: 100%; width: 14%;
+    background: linear-gradient(90deg, var(--teal-light), var(--emerald), var(--amber-light));
+    box-shadow: 0 0 12px var(--teal-glow);
+    transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .slides { position: absolute; inset: 0; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    padding: clamp(20px, 4vw, 60px) clamp(18px, 5vw, 80px) clamp(90px, 12vh, 120px);
+    opacity: 0;
+    transform: translateX(60px) scale(0.96);
+    filter: blur(8px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.6s ease;
+    pointer-events: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+  }
+  .slide::-webkit-scrollbar { width: 6px; }
+  .slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+  .slide > * { margin: auto; }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+    pointer-events: auto;
+    z-index: 2;
+  }
+  .slide.enter-from-left { transform: translateX(-60px) scale(0.96); }
+  .slide.enter-from-left.active { transform: translateX(0) scale(1); }
+  .slide.leave-left  { transform: translateX(-60px) scale(0.96); opacity: 0; filter: blur(8px); }
+  .slide.leave-right { transform: translateX(60px) scale(0.96); opacity: 0; filter: blur(8px); }
+
+  @keyframes revealUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .slide.active .reveal {
+    animation: revealUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0s) both;
+  }
+
+  /* ============ SLIDE 1: TITLE ============ */
+  .title-inner {
+    text-align: center;
+    max-width: 1000px;
+    position: relative;
+    z-index: 2;
+    padding: 10px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 100px;
+    background: linear-gradient(135deg, rgba(45,212,191,0.15), rgba(217,119,6,0.12));
+    border: 1px solid rgba(45,212,191,0.35);
+    color: var(--teal-light);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.72rem, 1.2vw, 0.9rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    box-shadow: 0 0 30px rgba(45,212,191,0.15);
+  }
+
+  .title-main {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.6rem, 9vw, 6.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin: clamp(16px, 3vw, 30px) 0;
+    background: linear-gradient(120deg, #ffffff 0%, #99f6e4 35%, #fbbf24 70%, #ffffff 100%);
+    background-size: 250% 250%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradientShift 9s ease infinite;
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  .title-divider {
+    width: 90px; height: 4px;
+    margin: 0 auto clamp(18px, 3vw, 28px);
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent, var(--teal-light), var(--amber-light), transparent);
+    box-shadow: 0 0 20px var(--teal-glow);
+  }
+  .title-sub {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+  .hint {
+    margin-top: clamp(24px, 5vh, 46px);
+    font-size: clamp(0.72rem, 1.1vw, 0.82rem);
+    color: var(--text-dim);
+    opacity: 0.75;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .hint kbd {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ============ CONTENT SLIDES ============ */
+  .content-layout { position: relative; width: 100%; display: flex; justify-content: center; }
+
+  .ghost-num {
+    position: absolute;
+    right: -2%;
+    bottom: -8%;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: clamp(180px, 34vw, 460px);
+    line-height: 0.75;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(45,212,191,0.09);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    letter-spacing: -0.05em;
+  }
+
+  .content-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 880px;
+    background: linear-gradient(150deg, rgba(255,255,255,0.075), rgba(255,255,255,0.015));
+    border: 1px solid var(--panel-border);
+    border-left: 4px solid var(--teal-light);
+    border-radius: 22px;
+    padding: clamp(26px, 4.5vw, 50px) clamp(22px, 4vw, 52px);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.07);
+    margin: auto;
+  }
+
+  .content-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(14px, 2.5vw, 22px);
+  }
+  .topic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(0.68rem, 1.1vw, 0.8rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #042f2e;
+    background: linear-gradient(135deg, var(--teal-light), var(--emerald));
+    box-shadow: 0 8px 24px rgba(45,212,191,0.28);
+  }
+  .verse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 16px;
+    border-radius: 100px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.68rem, 1.1vw, 0.8rem);
+    letter-spacing: 0.04em;
+    color: var(--amber-light);
+    background: rgba(217, 119, 6, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+  }
+
+  .content-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.35rem, 3.6vw, 2.3rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: #fff;
+    margin-bottom: clamp(16px, 3vw, 26px);
+  }
+
+  .content-text {
+    position: relative;
+    font-size: clamp(0.96rem, 1.75vw, 1.22rem);
+    line-height: 1.72;
+    color: #cbd5e1;
+    padding-left: clamp(16px, 2.5vw, 24px);
+    border-left: 3px solid rgba(45,212,191,0.55);
+    margin-bottom: clamp(4px, 1vw, 8px);
+    font-weight: 400;
+  }
+  .content-text .quote-mark {
+    position: absolute;
+    left: -4px; top: -22px;
+    font-family: Georgia, serif;
+    font-size: 3.4em;
+    color: rgba(45,212,191,0.16);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .content-text em {
+    font-style: italic;
+    color: #99f6e4;
+    font-weight: 500;
+  }
+
+  /* ============ CLOSING ============ */
+  .end-inner {
+    text-align: center;
+    max-width: 780px;
+    position: relative;
+    z-index: 2;
+  }
+  .end-logo {
+    width: clamp(70px, 9vw, 100px);
+    height: clamp(70px, 9vw, 100px);
+    margin: 0 auto clamp(22px, 4vw, 34px);
+    display: grid;
+    place-items: center;
+    border-radius: 28px;
+    font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+    color: #042f2e;
+    background: linear-gradient(135deg, var(--teal-light), var(--emerald), var(--amber-light));
+    box-shadow: 0 20px 60px rgba(45,212,191,0.35);
+    animation: pulseGlow 3.2s ease-in-out infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 20px 60px rgba(45,212,191,0.3); }
+    50%      { box-shadow: 0 20px 80px rgba(45,212,191,0.55); }
+  }
+  .end-line {
+    width: 70px; height: 3px;
+    margin: clamp(22px, 4vw, 34px) auto 0;
+    border-radius: 3px;
+    background: linear-gradient(90deg, transparent, var(--teal-light), var(--amber-light), transparent);
+  }
+
+  /* ============ CONTROLS ============ */
+  .controls {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(16px, 3vh, 28px);
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.6vw, 18px);
+    padding: 8px clamp(12px, 2vw, 18px);
+    border-radius: 100px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 16px 50px rgba(0,0,0,0.5);
+    z-index: 50;
+  }
+  .nav-btn {
+    width: clamp(36px, 4vw, 42px);
+    height: clamp(36px, 4vw, 42px);
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: var(--text);
+    font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--teal), var(--emerald));
+    border-color: transparent;
+    color: #042f2e;
+    transform: scale(1.08);
+    box-shadow: 0 8px 22px rgba(45,212,191,0.4);
+  }
+  .nav-btn:active:not(:disabled) { transform: scale(0.94); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .dots { display: flex; align-items: center; gap: clamp(6px, 1vw, 9px); }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.22);
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .dot:hover { background: rgba(255,255,255,0.45); }
+  .dot.active {
+    width: 26px;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--teal-light), var(--emerald));
+    box-shadow: 0 0 14px rgba(45,212,191,0.6);
+  }
+
+  .fs-btn {
+    position: fixed;
+    right: clamp(14px, 3vw, 26px);
+    bottom: clamp(16px, 3vh, 28px);
+    width: clamp(36px, 4vw, 42px);
+    height: clamp(36px, 4vw, 42px);
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.25s ease;
+    z-index: 50;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.5);
+  }
+  .fs-btn:hover { color: var(--teal-light); border-color: rgba(45,212,191,0.4); }
+
+  .counter {
+    position: fixed;
+    left: clamp(14px, 3vw, 26px);
+    bottom: clamp(16px, 3vh, 28px);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.72rem, 1.1vw, 0.85rem);
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    padding: 8px 14px;
+    border-radius: 100px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 50;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .ghost-num { font-size: 42vw; right: -8%; bottom: -4%; opacity: 0.7; }
+  }
+
+  @media (max-width: 640px) {
+    .slide { padding: 18px 16px 110px; }
+    .content-wrap { border-radius: 18px; }
+    .content-text .quote-mark { top: -14px; font-size: 2.6em; }
+    .counter { display: none; }
+    .controls { gap: 8px; padding: 7px 12px; }
+    .dot { width: 7px; height: 7px; }
+    .dot.active { width: 20px; }
+    .title-main { line-height: 0.95; }
+  }
+
+  @media (max-height: 620px) {
+    .slide { padding-top: 14px; padding-bottom: 96px; }
+    .title-main { font-size: clamp(2rem, 7vw, 3.5rem); }
+    .content-title { margin-bottom: 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div class="deck">
+  <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+  <main class="slides" id="slides">
+
+    <!-- ================= SLIDE 1 : TITLE ================= -->
+    <section class="slide active">
+      <div class="title-inner">
+        <span class="badge reveal" style="--delay:0.05s">
+          <i class="fa-solid fa-seedling"></i> Materi Pengajaran
+        </span>
+        <h1 class="title-main reveal" style="--delay:0.15s">Hati<br>Orang Tua</h1>
+        <div class="title-divider reveal" style="--delay:0.25s"></div>
+        <p class="title-sub reveal" style="--delay:0.35s">Mengenal Hati Bapa Rohani Kita</p>
+        <div class="hint reveal" style="--delay:0.55s">
+          Gunakan <kbd>←</kbd> <kbd>→</kbd> atau geser untuk berpindah
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 2 : PERTANYAAN PEMBUKA ================= -->
+    <section class="slide">
+      <div class="content-layout">
+        <div class="ghost-num">?</div>
+        <div class="content-wrap">
+          <div class="content-top reveal" style="--delay:0.05s">
+            <span class="topic-badge"><i class="fa-solid fa-comment-dots"></i> Pertanyaan Pembuka</span>
+          </div>
+          <h2 class="content-title reveal" style="--delay:0.13s">Apa Keinginan Terbesar Orang Tua?</h2>
+          <p class="content-text reveal" style="--delay:0.22s">
+            <span class="quote-mark">“</span>
+            Kak, saya mau tanya deh. Menurut Kakak, apa sih keinginan terbesar setiap orang tua untuk anak-anaknya? Pasti ingin anaknya sehat, sukses, bahagia, dan berkecukupan, kan? Dan kalau anak mulai salah jalan, orang tua pasti menasihati dan melarang karena sayang.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 3 : BAPA ROHANI ================= -->
+    <section class="slide">
+      <div class="content-layout">
+        <div class="ghost-num">1</div>
+        <div class="content-wrap">
+          <div class="content-top reveal" style="--delay:0.05s">
+            <span class="topic-badge"><i class="fa-solid fa-heart"></i> Bapa Rohani</span>
+            <span class="verse-badge"><i class="fa-solid fa-book-bible"></i> Ibrani 12:9</span>
+          </div>
+          <h2 class="content-title reveal" style="--delay:0.13s">Allah — Bapa Rohani Kita</h2>
+          <p class="content-text reveal" style="--delay:0.22s">
+            <span class="quote-mark">“</span>
+            Nah, di Alkitab (<em>Ibrani 12:9</em>), Allah itu disebut sebagai Bapa rohani kita. Sama seperti orang tua jasmani kita, Allah juga rindu semua anak-anak rohani-Nya sukses, makmur, dan selamat. Bedanya, orang tua jasmani memikirkan hidup sementara di dunia, sedangkan Bapa rohani kita memikirkan <em>keselamatan kekal</em> kita.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 4 : KENDALA ================= -->
+    <section class="slide">
+      <div class="content-layout">
+        <div class="ghost-num">2</div>
+        <div class="content-wrap">
+          <div class="content-top reveal" style="--delay:0.05s">
+            <span class="topic-badge"><i class="fa-solid fa-triangle-exclamation"></i> Kendala</span>
+          </div>
+          <h2 class="content-title reveal" style="--delay:0.13s">Bapa Rohani Tidak Kelihatan</h2>
+          <p class="content-text reveal" style="--delay:0.22s">
+            <span class="quote-mark">“</span>
+            Tapi ada satu kendala, Kak. Bapa rohani kita itu adalah Roh, tidak kelihatan. Akibatnya, kita sering tidak tahu apa sebenarnya keinginan-Nya. Banyak orang Kristen menebak-nebak kehendak Allah hanya pakai perasaan atau pikiran sendiri, sehingga akhirnya sering salah jalan.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 5 : SOLUSI ================= -->
+    <section class="slide">
+      <div class="content-layout">
+        <div class="ghost-num">3</div>
+        <div class="content-wrap">
+          <div class="content-top reveal" style="--delay:0.05s">
+            <span class="topic-badge"><i class="fa-solid fa-book-open"></i> Solusi</span>
+            <span class="verse-badge"><i class="fa-solid fa-book-bible"></i> Yohanes 1:1</span>
+          </div>
+          <h2 class="content-title reveal" style="--delay:0.13s">Alkitab — "Allah yang Terlihat"</h2>
+          <p class="content-text reveal" style="--delay:0.22s">
+            <span class="quote-mark">“</span>
+            Supaya kita tidak tersesat, Allah memberikan Alkitab. <em>Yohanes 1:1</em> mencatat bahwa Firman itu adalah Allah sendiri. Jadi, Alkitab adalah <em>'Allah yang terlihat'</em>—sebuah surat petunjuk tertulis dari Bapa kita. Melalui Alkitab inilah kita bisa tahu pasti apa isi hati-Nya, rencana-Nya, dan jalan keselamatan-Nya.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 6 : AJAKAN ================= -->
+    <section class="slide">
+      <div class="content-layout">
+        <div class="ghost-num">4</div>
+        <div class="content-wrap">
+          <div class="content-top reveal" style="--delay:0.05s">
+            <span class="topic-badge"><i class="fa-solid fa-handshake"></i> Ajakan</span>
+            <span class="verse-badge"><i class="fa-solid fa-book-bible"></i> 1 Timotius 2:4</span>
+          </div>
+          <h2 class="content-title reveal" style="--delay:0.13s">Belajar Mengerti Isi Hati-Nya</h2>
+          <p class="content-text reveal" style="--delay:0.22s">
+            <span class="quote-mark">“</span>
+            Di <em>1 Timotius 2:4</em> dikatakan Allah ingin semua orang diselamatkan dan tahu kebenaran. Anak yang berbakti adalah anak yang mau mendengarkan hati orang tuanya. Bakti rohani kita adalah dengan belajar mengerti isi Alkitab ini. Kebenaran yang memerdekakan ini bisa kita pelajari bersama secara terstruktur di Kelas Alkitab online maupun onsite, santai, dan gratis. Yuk, kita belajar bersama-sama?
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 7 : CLOSING ================= -->
+    <section class="slide">
+      <div class="end-inner">
+        <div class="end-logo reveal" style="--delay:0.05s">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <div class="end-line reveal" style="--delay:0.15s"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="counter" id="counter">1 / 7</div>
+
+  <nav class="controls" aria-label="Navigasi slide">
+    <button class="nav-btn" id="prevBtn" aria-label="Slide sebelumnya">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="nextBtn" aria-label="Slide berikutnya">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </nav>
+
+  <button class="fs-btn" id="fsBtn" aria-label="Layar penuh">
+    <i class="fa-solid fa-expand"></i>
+  </button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const slides      = Array.from(document.querySelectorAll('.slide'));
+  const slidesWrap  = document.getElementById('slides');
+  const dotsWrap    = document.getElementById('dots');
+  const progressFill= document.getElementById('progressFill');
+  const counter     = document.getElementById('counter');
+  const prevBtn     = document.getElementById('prevBtn');
+  const nextBtn     = document.getElementById('nextBtn');
+  const fsBtn       = document.getElementById('fsBtn');
+
+  let current = 0;
+  let animating = false;
+  const TOTAL = slides.length;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Ke slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i, i > current ? 1 : -1));
+    dotsWrap.appendChild(dot);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function goTo(index, dir) {
+    if (index < 0 || index >= TOTAL || index === current || animating) return;
+    animating = true;
+
+    const leaving  = slides[current];
+    const entering = slides[index];
+
+    leaving.classList.remove('active');
+    leaving.classList.add(dir > 0 ? 'leave-left' : 'leave-right');
+
+    entering.classList.remove('leave-left', 'leave-right', 'enter-from-left');
+    if (dir < 0) entering.classList.add('enter-from-left');
+    void entering.offsetWidth;
+    entering.classList.add('active');
+
+    window.setTimeout(() => {
+      leaving.classList.remove('leave-left', 'leave-right');
+      entering.classList.remove('enter-from-left');
+      animating = false;
+    }, 700);
+
+    current = index;
+    updateUI();
+  }
+
+  function next() { goTo(current + 1, 1); }
+  function prev() { goTo(current - 1, -1); }
+
+  function updateUI() {
+    progressFill.style.width = ((current + 1) / TOTAL * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + TOTAL;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === TOTAL - 1;
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case ' ':
+      case 'PageDown':
+        e.preventDefault(); next(); break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault(); prev(); break;
+      case 'Home':
+        e.preventDefault(); goTo(0, -1); break;
+      case 'End':
+        e.preventDefault(); goTo(TOTAL - 1, 1); break;
+    }
+  });
+
+  let touchX = 0, touchY = 0, tracking = false;
+  slidesWrap.addEventListener('touchstart', (e) => {
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+
+  slidesWrap.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  fsBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.();
+    }
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    const icon = fsBtn.querySelector('i');
+    icon.className = document.fullscreenElement ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+  });
+
+  let wheelLock = false;
+  slidesWrap.addEventListener('wheel', (e) => {
+    if (wheelLock) return;
+    if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
+    const active = slides[current];
+    if (active.scrollHeight > active.clientHeight + 4) return;
+    wheelLock = true;
+    if (e.deltaY > 0 || e.deltaX > 0) next(); else prev();
+    window.setTimeout(() => { wheelLock = false; }, 750);
+  }, { passive: true });
+
+  updateUI();
+})();
+</script>
+
+</body>
+</html>
